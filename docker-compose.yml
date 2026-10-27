@@ -1,0 +1,38 @@
+# Terminal Music backend — one-command deploy for your always-on server.
+#
+#   docker compose up -d --build        # start (or rebuild + start)
+#   docker compose logs -f              # watch logs
+#   docker compose pull && docker compose up -d --build   # update yt-dlp etc.
+#   docker compose down                 # stop
+#
+# The app only ever talks to this service over HTTP, so moving the backend here
+# needs ZERO app code changes — just point the app's base URL at this server.
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    image: terminal-music:latest
+    container_name: terminal-music
+    restart: unless-stopped
+    # Host:container. Change the left side if 8000 is taken on your server.
+    ports:
+      - "8000:8000"
+    environment:
+      # All TM_* vars are read by server/config.py. Override via a .env file
+      # (copy .env.example to .env). Secrets should live in .env, not here.
+      TM_HOST: "0.0.0.0"
+      TM_PORT: "8000"
+      TM_DATA_DIR: "/data"
+      TM_CORS_ORIGINS: "${TM_CORS_ORIGINS:-*}"
+      TM_STREAM_URL_TTL: "${TM_STREAM_URL_TTL:-1800}"
+      TM_DOWNLOAD_FORMAT: "${TM_DOWNLOAD_FORMAT:-m4a}"
+      TM_YOUTUBE_API_KEY: "${TM_YOUTUBE_API_KEY:-}"
+    env_file:
+      - .env
+    # Persist downloads + caches outside the container so updates don't wipe them.
+    volumes:
+      - tm-data:/data
+
+volumes:
+  tm-data:

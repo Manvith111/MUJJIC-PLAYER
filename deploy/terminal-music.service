@@ -1,0 +1,31 @@
+# NON-DOCKER option: run the backend as a systemd service on a Linux server.
+# Use this ONLY if you don't want Docker. Most people should use docker-compose.
+#
+# Install:
+#   sudo cp deploy/terminal-music.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now terminal-music
+#   sudo systemctl status terminal-music
+#   journalctl -u terminal-music -f          # logs
+#
+# Assumes: repo at /opt/terminal-music, a venv at /opt/terminal-music/.venv with
+# server/requirements.txt installed, ffmpeg installed system-wide (apt install ffmpeg),
+# and a .env file at /opt/terminal-music/.env.
+[Unit]
+Description=Terminal Music backend (FastAPI)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/terminal-music
+EnvironmentFile=/opt/terminal-music/.env
+Environment=TM_DATA_DIR=/opt/terminal-music/data
+ExecStart=/opt/terminal-music/.venv/bin/uvicorn server.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=3
+# Minor hardening.
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

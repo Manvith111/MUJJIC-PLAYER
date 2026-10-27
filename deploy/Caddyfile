@@ -1,0 +1,16 @@
+# OPTIONAL: put the backend behind HTTPS on a real domain with automatic certs.
+#
+# Why you'd want this: the APK hardcodes a backend URL. A domain like
+# https://music.example.com never changes, so your app keeps working even if the
+# server's IP changes — unlike a bare LAN IP. HTTPS also lets you drop the
+# `usesCleartextTraffic` workaround later.
+#
+# Prereqs: a domain's A record pointing at your server, ports 80 + 443 open.
+# Run Caddy (easiest as a second compose service, or the system package):
+#   caddy run --config ./deploy/Caddyfile
+#
+# Replace music.example.com with your domain. Caddy fetches + renews TLS certs
+# from Let's Encrypt automatically.
+music.example.com {
+    reverse_proxy 127.0.0.1:8000
+}

@@ -1,0 +1,19 @@
+  (Could not add firewall rule for port 8000 -- run allow-firewall.ps1 as admin if phones can't connect.)
+  (Could not add firewall rule for port 8090 -- run allow-firewall.ps1 as admin if phones can't connect.)
+
+==================================================================
+  MUJJIC PLAYER  --  cross-device links (same Wi-Fi as this PC)
+==================================================================
+  Web app (open on ANY device's browser): http://192.168.1.10:8090
+  Backend API base:                       http://192.168.1.10:8000
+  Health check:                           http://192.168.1.10:8000/health
+  Search example:                         http://192.168.1.10:8000/search?q=lofi&type=songs
+  Download a track (m4a):                 http://192.168.1.10:8000/download/{videoId}
+  Stream a track:                         http://192.168.1.10:8000/stream/{videoId}
+------------------------------------------------------------------
+  Native APK (background audio, lock screen): run ./build-apk.ps1
+  Point the installed app's Settings -> Backend URL at: http://192.168.1.10:8000
+==================================================================
+
+Backend starting (PID 25100) on 0.0.0.0:8000 -- logs: data\backend.log
+  Waiting for backend to finish loading (first boot imports yt-dlp/ytmusicapi, can take ~60s)...

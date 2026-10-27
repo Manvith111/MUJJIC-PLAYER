@@ -1,0 +1,13 @@
+# Keep the build context small + the image clean.
+app/
+data/
+cube-round3-pod/
+.agents/
+.git/
+.venv/
+**/__pycache__/
+**/*.pyc
+*.ps1
+*.bat
+*.md
+.env
